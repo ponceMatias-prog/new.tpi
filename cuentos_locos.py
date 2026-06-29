@@ -98,6 +98,12 @@ SEPARADOR = "*" * 50
 
 # FUNCIONES
 
+def mostrar_encabezado():
+    print("\n" + SEPARADOR)
+    print("         CUENTOS LOCOS")
+    print("     Historias interactivas")
+    print(SEPARADOR)
+
 
 def mostrar_menu():                          
 
