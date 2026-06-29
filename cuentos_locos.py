@@ -1,5 +1,13 @@
 import random
 
+#Lista de plantillas de historias. Cada plantilla es un diccionario con 3 campos:
+#"titulo" = nombre del cuento
+#"tipos" = lista de tuplas (clave, descripcion_para_el_usuario)
+#"texto" = minicuentos con marcadores {clave}
+
+#se usó lista de diccionarios porque se necesita mantener juntos el texto del cuento y los tipos de palabras
+#que le corresponden. El diccionario asocia cada dato con su nombre.
+
 PLANTILLAS = [
     {
         "titulo": "La gran aventura",
@@ -98,14 +106,14 @@ SEPARADOR = "*" * 50
 
 # FUNCIONES
 
-def mostrar_encabezado():
+def mostrar_encabezado():                   #encabezado de bienvenida al juego
     print("\n" + SEPARADOR)
     print("         CUENTOS LOCOS")
     print("     Historias interactivas")
     print(SEPARADOR)
 
 
-def mostrar_menu():                          
+def mostrar_menu():                          #muestra opciones del submenú de cuentos locos
 
     print("\n" + SEPARADOR)
     print("  ¿Qué querés hacer?")
@@ -116,7 +124,10 @@ def mostrar_menu():
     print(SEPARADOR)
 
 
-def validar_palabra(descripcion):                                 
+def validar_palabra(descripcion):                                   #pide una palabra al usuario y valida que no esté vacía.
+                                                                    #repite la pregunta hasta recibir un valor váido
+                                                                    # usa .strip() para ignorar espacios en blanco
+                                                                    # retorna la palabra ingresada como string                      
 
     while True:
         palabra = input("  -> " + descripcion + ": ").strip()
@@ -127,6 +138,10 @@ def validar_palabra(descripcion):
 
 
 def pedir_palabras(tipos):
+
+    """recibe una lista de tuplas (clave, descripcion). Le pide al usuario una palabra par cada tipo de validación.
+        Devuelve un diccionario {clave: palabra_ingresada}. Se usa diccionario para asociar el nombre del marcador (clave)
+        con el valor ingresado por el usuario, para después insertarlos en la plantilla con .format(**palabras)"""
    
     print("\n  Completá las siguientes palabras sin saber la historia:")
     print("  " + "-" * 46)
@@ -136,19 +151,25 @@ def pedir_palabras(tipos):
     return palabras
 
 
-def elegir_plantilla():                                 
+def elegir_plantilla():                                 #elige una plantilla al azar de la lisra PLANTILLAS
+                                                        #Usa random.randit para generar un índice válido
+                                                        #devuelve el diccionrio completo de la plantilla elegida.
 
     indice = random.randint(0, len(PLANTILLAS) - 1)
     return PLANTILLAS[indice]
 
 
-def generar_historia(plantilla, palabras):          
+def generar_historia(plantilla, palabras):              #toma el texto de la plantilla y reemplaza los marcadores
+                                                        #{clave} con las palabras del diccionario usando .format().
+                                                        #el operador ** desempaqueta el diccionario como argumentos.
+                                                        #devuelve el string final de la historia creada
 
     historia = plantilla["texto"].format(**palabras)
     return historia
 
 
-def mostrar_historia(titulo, historia):             
+def mostrar_historia(titulo, historia):             #muestra la historia generada con formato en la terminal.
+                                                    #convierte el titulo en mayusculas con .upper() para destacarlo.
    
     print("\n" + SEPARADOR)
     print("  " + titulo.upper())
@@ -184,12 +205,14 @@ def ver_historial():                                           #lee el archivo d
             print("\n  todavía no hay historias guardadas.")
         else:
             print(contenido)
-    except FileNotFoundError:              
+    except FileNotFoundError:              #el archivo no existe porque nynca se guardó ninguna historia
         print("\n  todavía no hay historias guardadas.")
     input("\n ENTER para continuar...")
 
 
-def iniciar():                                      
+def iniciar():                                                  #función principal del juego
+                                                                #contiene el bucle del submenú y coordina todas las funciones.
+                                                                #el menú principal del grupo llama a ésta función para ingresar
     
     mostrar_encabezado()
     print("\n  Te pediremos algunas palabras y las usaremos")
